@@ -14,7 +14,6 @@ class AppButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Container(
-
           margin: EdgeInsets.all(10.0),
           child: SizedBox(
             width: 70,
@@ -27,7 +26,7 @@ class AppButton extends StatelessWidget{
                 text,
                 style: GoogleFonts.rubik(
                   textStyle: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                   ),
                 ),
               ),
