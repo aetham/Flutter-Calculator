@@ -50,7 +50,21 @@ class _ConverterPage extends State<ConverterPage>{
   }
     @override
     Widget build(BuildContext context) {
+
+
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Calculator',
+        theme: ThemeData(primarySwatch: Colors.blue),
+      );
+
+
       return Scaffold(
+
+        appBar: AppBar(
+        title: Text('Flutter converter'),
+        ),
+
         body: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -62,13 +76,13 @@ class _ConverterPage extends State<ConverterPage>{
                     mode,
                     style: GoogleFonts.rubik(
                         textStyle:TextStyle(
-                          fontSize: 48,
+                          fontSize: 30,
                           color: Colors.black,
                         )
                     ),
                   ),
                 ),
-                alignment: Alignment(1.0, 1.0),
+                alignment: Alignment.center,
               ),
 
               Container(

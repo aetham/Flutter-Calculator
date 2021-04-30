@@ -90,8 +90,6 @@ class _MainPageState extends State<MainPage>{
               ),
               alignment: Alignment(1.0, 1.0),
             ),
-
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
