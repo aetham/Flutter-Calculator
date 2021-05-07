@@ -61,23 +61,6 @@ class _HistoryPage extends State<HistoryPage> {
 
               },
             ),
-
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  onPressed:() async{
-                    getValues();
-                  },
-                  child: Text(
-                      'get'
-                  ),
-
-                )
-              ],
-            ),
-
           ],
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:newest/ConverterPage.dart';
 import 'package:newest/HistoryPage.dart';
 import 'package:newest/widgets/app_button/app_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 
 
@@ -18,6 +19,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>{
   var now = DateTime.now();
+  String formattedDateTime = DateFormat('MM-dd-yyyy kk:mm').format(DateTime.now()).toString();
   int firstNum = 0;
   int secondNum = 0;
   int holder = 0;
@@ -25,7 +27,6 @@ class _MainPageState extends State<MainPage>{
   String operation = '';
   String result = '';
   String history = '';
-  String silen = '';
   List<String> wuudish= [];
 
   void setValues() async{
@@ -42,12 +43,10 @@ class _MainPageState extends State<MainPage>{
         Navigator.push(context, new MaterialPageRoute(builder: (context)=> HistoryPage()));
       }
   }
-  void addingToList(){
-
-    silen = history + "=" + result.toString();
-    wuudish.add(silen);
+  void addingInformation(){
+    wuudish.add(history = 'Equation: '+ firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+    wuudish.add('Timestamp: '+formattedDateTime.toString());
   }
-
 void btnOnClick(String btnVal){
     if(btnVal =="C"){
       textToDisplay = '';
@@ -67,23 +66,23 @@ void btnOnClick(String btnVal){
       secondNum = int.parse(textToDisplay);
       if(operation =='+'){
         result = (firstNum + secondNum).toString();
-        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+        addingInformation();
       }
       if(operation =='-'){
         result = (firstNum - secondNum).toString();
-        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+        addingInformation();
       }
       if(operation =='/'){
         result = (firstNum / secondNum).toString();
-        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+        addingInformation();
       }
       if(operation =='*'){
         result = (firstNum * secondNum).toString();
-        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+        addingInformation();
       }
       if(operation =='^'){
         result = (pow(firstNum, secondNum)).toString();
-        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+        addingInformation();
       }
     }else{
       result = int.parse(textToDisplay +btnVal).toString();
@@ -170,7 +169,6 @@ void btnOnClick(String btnVal){
                   child: Text(
                     'History'
                   ),
-
                 )
               ],
             ),
