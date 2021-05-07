@@ -27,15 +27,15 @@ class _MainPageState extends State<MainPage>{
   String operation = '';
   String result = '';
   String history = '';
-  List<String> wuudish= [];
+  List<String> transport= [];
 
   void setValues() async{
     SharedPreferences share = await SharedPreferences.getInstance();
-    share.setStringList('fuck', wuudish);
+    share.setStringList('Value', transport);
   }
   void getValues() async{
     SharedPreferences share = await SharedPreferences.getInstance();
-    List<String> a = share.getStringList('fuck');
+    List<String> a = share.getStringList('Value');
   }
 
   void btnOnClickTwo(String btnVal){
@@ -44,8 +44,8 @@ class _MainPageState extends State<MainPage>{
       }
   }
   void addingInformation(){
-    wuudish.add(history = 'Equation: '+ firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
-    wuudish.add('Timestamp: '+formattedDateTime.toString());
+    transport.add(history = 'Equation: '+ firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+    transport.add('Timestamp: '+formattedDateTime.toString());
   }
 void btnOnClick(String btnVal){
     if(btnVal =="C"){

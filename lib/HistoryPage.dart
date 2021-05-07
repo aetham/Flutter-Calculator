@@ -21,7 +21,7 @@ class _HistoryPage extends State<HistoryPage> {
 
   void getValues() async{
     SharedPreferences share = await SharedPreferences.getInstance();
-    List<String> a = share.getStringList('fuck');
+    List<String> a = share.getStringList('Value');
     print(a);
     for(int i = 0; i < a.length; i++ ){
       operations.add(a[i]);
