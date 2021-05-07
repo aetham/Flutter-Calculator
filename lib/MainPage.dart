@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newest/ConverterPage.dart';
+import 'package:newest/HistoryPage.dart';
 import 'package:newest/widgets/app_button/app_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 class MainPage extends StatefulWidget {
@@ -14,16 +17,38 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>{
-
+  var now = DateTime.now();
   int firstNum = 0;
   int secondNum = 0;
   int holder = 0;
   String textToDisplay = '';
   String operation = '';
   String result = '';
-  String operator = '';
-  void btnOnClick(String btnVal){
+  String history = '';
+  String silen = '';
+  List<String> wuudish= [];
 
+  void setValues() async{
+    SharedPreferences share = await SharedPreferences.getInstance();
+    share.setStringList('fuck', wuudish);
+  }
+  void getValues() async{
+    SharedPreferences share = await SharedPreferences.getInstance();
+    List<String> a = share.getStringList('fuck');
+  }
+
+  void btnOnClickTwo(String btnVal){
+    if(btnVal =="History"){
+        Navigator.push(context, new MaterialPageRoute(builder: (context)=> HistoryPage()));
+      }
+  }
+  void addingToList(){
+
+    silen = history + "=" + result.toString();
+    wuudish.add(silen);
+  }
+
+void btnOnClick(String btnVal){
     if(btnVal =="C"){
       textToDisplay = '';
       firstNum = 0;
@@ -31,8 +56,8 @@ class _MainPageState extends State<MainPage>{
       holder = 0;
       operation = '';
       result = '';
-    }
-    if(btnVal=="CON"){
+
+    }else if(btnVal=="CON"){
       Navigator.push(context, new MaterialPageRoute(builder: (context)=> ConverterPage()));
     }else if(btnVal == '+'|| btnVal == '-'|| btnVal == '*'||btnVal == '/'||btnVal == '^'){
       firstNum = int.parse(textToDisplay);
@@ -42,18 +67,23 @@ class _MainPageState extends State<MainPage>{
       secondNum = int.parse(textToDisplay);
       if(operation =='+'){
         result = (firstNum + secondNum).toString();
+        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
       }
       if(operation =='-'){
         result = (firstNum - secondNum).toString();
+        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
       }
       if(operation =='/'){
         result = (firstNum / secondNum).toString();
+        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
       }
       if(operation =='*'){
         result = (firstNum * secondNum).toString();
+        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
       }
       if(operation =='^'){
         result = (pow(firstNum, secondNum)).toString();
+        wuudish.add(history = firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
       }
     }else{
       result = int.parse(textToDisplay +btnVal).toString();
@@ -132,12 +162,21 @@ class _MainPageState extends State<MainPage>{
               children: [
                 AppButton(text: '0',callback: btnOnClick),
                 AppButton(text: 'CON',callback: btnOnClick),
+                RaisedButton(
+                  onPressed:() async{
+                    setValues();
+                    btnOnClickTwo('History');
+                    },
+                  child: Text(
+                    'History'
+                  ),
+
+                )
               ],
             ),
           ],
         ),
       ),
-
     );
   }
 }
