@@ -29,9 +29,7 @@ class _HistoryPage extends State<HistoryPage> {
     setState(() {
       a.toString();
     });
-
     }
-
   String mode = '';
   @override
   Widget build(BuildContext context) {

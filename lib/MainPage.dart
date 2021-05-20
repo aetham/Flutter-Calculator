@@ -1,13 +1,17 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newest/ConverterPage.dart';
 import 'package:newest/HistoryPage.dart';
+import 'package:newest/FirebaseHistory.dart';
 import 'package:newest/widgets/app_button/app_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+
 
 
 
@@ -18,6 +22,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>{
+  final FirebaseFirestore asb = FirebaseFirestore.instance;
+  final CollectionReference collectionReference = FirebaseFirestore.instance.collection('calculation');
+
   var now = DateTime.now();
   String formattedDateTime = DateFormat('MM-dd-yyyy kk:mm').format(DateTime.now()).toString();
   int firstNum = 0;
@@ -27,6 +34,7 @@ class _MainPageState extends State<MainPage>{
   String operation = '';
   String result = '';
   String history = '';
+  String wuush = '';
   List<String> transport= [];
 
   void setValues() async{
@@ -43,8 +51,16 @@ class _MainPageState extends State<MainPage>{
         Navigator.push(context, new MaterialPageRoute(builder: (context)=> HistoryPage()));
       }
   }
-  void addingInformation(){
+  void btnOnClickThree(String btnVal){
+    if(btnVal =="History FB"){
+      Navigator.push(context, new MaterialPageRoute(builder: (context)=> FirebaseHistory()));
+    }
+  }
+  Future<void> addingInformation() async {
     transport.add(history = 'Equation: '+ firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString());
+    wuush = history = 'Equation: '+ firstNum.toString() + operation.toString() + secondNum.toString() + "=" + result.toString();
+    await collectionReference.add({'calculation':wuush});
+    wuush = '';
     transport.add('Timestamp: '+formattedDateTime.toString());
   }
 void btnOnClick(String btnVal){
@@ -94,87 +110,107 @@ void btnOnClick(String btnVal){
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter calculator'),
-      ),
+    return FutureBuilder<FirebaseApp>(
+        future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Center(child: CircularProgressIndicator());
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Flutter calculator'),
+          ),
 
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+          body: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
 
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Text(
-                  textToDisplay,
-                  style: GoogleFonts.rubik(
-                      textStyle:TextStyle(
-                        fontSize: 48,
-                        color: Colors.black,
-                      )
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Text(
+                      textToDisplay,
+                      style: GoogleFonts.rubik(
+                          textStyle:TextStyle(
+                            fontSize: 48,
+                            color: Colors.black,
+                          )
+                      ),
+                    ),
                   ),
+                  alignment: Alignment(1.0, 1.0),
                 ),
-              ),
-              alignment: Alignment(1.0, 1.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AppButton(text: 'C', callback: btnOnClick),
-                AppButton(text: '^', callback: btnOnClick),
-                AppButton(text: '*', callback: btnOnClick),
-                AppButton(text: '/', callback: btnOnClick),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AppButton(text: 'C', callback: btnOnClick),
+                    AppButton(text: '^', callback: btnOnClick),
+                    AppButton(text: '*', callback: btnOnClick),
+                    AppButton(text: '/', callback: btnOnClick),
 
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AppButton(text: '1', callback: btnOnClick),
+                    AppButton(text: '2', callback: btnOnClick),
+                    AppButton(text: '3', callback: btnOnClick),
+                    AppButton(text: '+', callback: btnOnClick),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AppButton(text: '4', callback: btnOnClick),
+                    AppButton(text: '5', callback: btnOnClick),
+                    AppButton(text: '6', callback: btnOnClick),
+                    AppButton(text: '-', callback: btnOnClick),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AppButton(text: '7',callback: btnOnClick),
+                    AppButton(text: '8',callback: btnOnClick),
+                    AppButton(text: '9',callback: btnOnClick),
+                    AppButton(text: '=',callback: btnOnClick),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AppButton(text: '0',callback: btnOnClick),
+                    AppButton(text: 'CON',callback: btnOnClick),
+                    ElevatedButton(
+                      onPressed:() async{
+                        setValues();
+                        btnOnClickTwo('History');
+                        },
+                      child: Text(
+                        'History'
+                      ),
+
+                    ),
+                    ElevatedButton(
+                      onPressed:() {
+                        setValues();
+                        btnOnClickThree('History FB');
+                      },
+                      child: Text(
+                          'History FB'
+                      ),
+
+                    ),
+
+                  ],
+                ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AppButton(text: '1', callback: btnOnClick),
-                AppButton(text: '2', callback: btnOnClick),
-                AppButton(text: '3', callback: btnOnClick),
-                AppButton(text: '+', callback: btnOnClick),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AppButton(text: '4', callback: btnOnClick),
-                AppButton(text: '5', callback: btnOnClick),
-                AppButton(text: '6', callback: btnOnClick),
-                AppButton(text: '-', callback: btnOnClick),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AppButton(text: '7',callback: btnOnClick),
-                AppButton(text: '8',callback: btnOnClick),
-                AppButton(text: '9',callback: btnOnClick),
-                AppButton(text: '=',callback: btnOnClick),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AppButton(text: '0',callback: btnOnClick),
-                AppButton(text: 'CON',callback: btnOnClick),
-                RaisedButton(
-                  onPressed:() async{
-                    setValues();
-                    btnOnClickTwo('History');
-                    },
-                  child: Text(
-                    'History'
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }
     );
   }
 }
